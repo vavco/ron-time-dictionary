@@ -146,17 +146,17 @@ button:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
 
   var UI = {
     he: { dir: "rtl", title: "מילון הזמנים של רון", sub: "לחצו על ביטוי, וקבלו את האמת",
-          random: "עכשיו! – תודו שלרגע האמנתם (:",
+          random: "הפתעה 🎲", surprise: "עכשיו! - תודו שלרגע האמנתם (:",
           count: function (n) { return "מספר הדחיות עד כה: " + n; },
           foot: "נבנה במיוחד לרון 🎂",
           pick: "לחצו על ביטוי כדי לשמוע את התשובה" },
     en: { dir: "ltr", title: "Ron's Time Dictionary", sub: "Tap a phrase, get the truth",
-          random: "Now! – admit you believed it for a second (:",
+          random: "Surprise me 🎲", surprise: "Now! - admit you believed it for a second (:",
           count: function (n) { return "Postponements so far: " + n; },
           foot: "Made just for Ron 🎂",
           pick: "Tap a phrase to hear the truth" },
     es: { dir: "ltr", title: "Diccionario de tiempos de Ron", sub: "Toca una frase y recibe la verdad",
-          random: "¡Ahora! – admitan que por un segundo lo creyeron (:",
+          random: "Sorpréndeme 🎲", surprise: "¡Ahora! - admitan que por un segundo lo creyeron (:",
           count: function (n) { return "Aplazamientos hasta ahora: " + n; },
           foot: "Hecho especialmente para Ron 🎂",
           pick: "Toca una frase para oír la verdad" }
@@ -249,7 +249,13 @@ button:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
   });
 
   el.random.addEventListener("click", function () {
-    choose(Math.floor(Math.random() * PHRASES.length));
+    // The surprise button shows a fixed joke instead of a phrase response; it is not counted.
+    el.say.textContent = "";
+    el.answer.textContent = UI[lang].surprise;
+    el.emo.textContent = "😂";
+    el.result.classList.remove("pop");
+    void el.result.offsetWidth; // restart animation
+    el.result.classList.add("pop");
   });
 
   var savedCount = parseInt(load(KEY_COUNT) || "0", 10);
