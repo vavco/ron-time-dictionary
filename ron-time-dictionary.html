@@ -5,15 +5,15 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>מילון הזמנים של רון</title>
 <style>
-:root{--bg:#f5f1ff;--card:#ffffff;--ink:#261b3d;--muted:#6f6789;--acc:#7b4dff;--acc-soft:#ece5ff;--line:#e2d9f5;--key:#faf8ff;--key-h:#efe9ff}
+:root{--bg:linear-gradient(135deg,#ffe3f1 0%,#e3f0ff 50%,#e6ffe9 100%);--card:#ffffff;--ink:#261b3d;--muted:#6f6789;--acc:#7b4dff;--acc-soft:#ece5ff;--line:#e2d9f5;--key:#faf8ff;--key-h:#efe9ff}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#150f24;--card:#1f1733;--ink:#f1ecff;--muted:#a79cc4;--acc:#a58bff;--acc-soft:#2b2148;--line:#362c58;--key:#241b3d;--key-h:#302553}}
 :root[data-theme="dark"]{--bg:#150f24;--card:#1f1733;--ink:#f1ecff;--muted:#a79cc4;--acc:#a58bff;--acc-soft:#2b2148;--line:#362c58;--key:#241b3d;--key-h:#302553}
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
-body{background:var(--bg);color:var(--ink);font-family:"Segoe UI",Arial,"Noto Sans Hebrew",sans-serif;min-height:100vh;padding:16px;overflow-x:hidden}
+body{background:var(--bg);background-attachment:fixed;color:var(--ink);font-family:"Segoe UI",Arial,"Noto Sans Hebrew",sans-serif;min-height:100vh;padding:16px;overflow-x:hidden}
 .wrap{max-width:720px;margin:0 auto}
 header{text-align:center;padding:8px 0 4px}
-h1{margin:0;font-size:clamp(24px,6vw,34px)}
+h1{margin:0;font-size:clamp(24px,6vw,34px);background:linear-gradient(90deg,#ff4f9a,#7b4dff,#14b8a6);-webkit-background-clip:text;background-clip:text;color:transparent}
 .sub{color:var(--muted);margin:6px 0 14px;font-size:15px}
 .langs{display:flex;justify-content:center;gap:6px;margin-bottom:14px;flex-wrap:wrap}
 .langs button{border:1px solid var(--line);background:var(--card);color:var(--ink);padding:8px 14px;border-radius:999px;font-size:15px;cursor:pointer}
@@ -21,16 +21,16 @@ h1{margin:0;font-size:clamp(24px,6vw,34px)}
 .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;box-shadow:0 6px 18px rgba(60,40,120,.08)}
 .result{min-height:150px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;margin-bottom:16px}
 .result .say{color:var(--muted);font-size:15px;margin-bottom:8px;min-height:22px}
-.result .answer{font-size:clamp(19px,4.6vw,24px);font-weight:600;line-height:1.5;word-break:break-word}
+.result .answer{font-size:clamp(19px,4.6vw,24px);font-weight:700;line-height:1.5;word-break:break-word;color:var(--acc)}
 .result .emo{font-size:44px;margin-top:6px;min-height:50px}
 .result.pop .answer,.result.pop .emo{animation:pop .45s ease}
 @keyframes pop{0%{transform:scale(.9);opacity:0}60%{transform:scale(1.04);opacity:1}100%{transform:scale(1)}}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:9px}
-.chip{position:relative;background:var(--key);color:var(--ink);border:1px solid var(--line);border-radius:14px;padding:12px 8px;font-size:15px;font-weight:600;cursor:pointer;min-height:52px;line-height:1.3;transition:background .15s,transform .1s;font-family:inherit}
-.chip:hover{background:var(--key-h)}
+.chip{position:relative;background:var(--c,var(--key));color:#261b3d;border:1px solid rgba(38,27,61,.12);border-radius:14px;padding:12px 8px;font-size:15px;font-weight:700;cursor:pointer;min-height:52px;line-height:1.3;transition:filter .15s,transform .1s;font-family:inherit;box-shadow:0 3px 0 rgba(38,27,61,.08)}
+.chip:hover{filter:brightness(.97) saturate(1.1)}
 .chip:active{transform:scale(.97)}
 .tools{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:14px;flex-wrap:wrap}
-.tools button{background:var(--acc);color:#fff;border:0;border-radius:12px;padding:10px 16px;font-size:15px;cursor:pointer;font-family:inherit}
+.tools button{background:linear-gradient(90deg,#ff4f9a,#7b4dff);color:#fff;border:0;border-radius:12px;padding:10px 16px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit}
 .count{color:var(--muted);font-size:14px}
 footer{text-align:center;color:var(--muted);font-size:13px;margin-top:18px}
 button:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
@@ -141,7 +141,10 @@ button:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
       es: ["Después de descansar un poco", "O sea, para siempre 😴"] },
     { he: ["אחרי שאתאקלם", "תנשמו, זה לא הולך לקרות כל כך מהר 🌬️"],
       en: ["After I adjust", "Breathe, it's not happening that fast 🌬️"],
-      es: ["Después de adaptarme", "Respiren, no va a pasar tan rápido 🌬️"] }
+      es: ["Después de adaptarme", "Respiren, no va a pasar tan rápido 🌬️"] },
+    { he: ["נכוון לספטמבר 25", "ונקווה שבמקרה הטוב זה יהיה ינואר 27 🍀"],
+      en: ["Let's say September 25", "Hopefully best case, January 27 🍀"],
+      es: ["Digamos 25 de septiembre", "Ojalá, en el mejor caso, 27 de enero 🍀"] }
   ];
 
   var UI = {
@@ -218,6 +221,9 @@ button:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
       var b = document.createElement("button");
       b.type = "button";
       b.className = "chip";
+      // Each phrase gets its own pastel color, spread around the color wheel.
+      var hue = (i * 47) % 360;
+      b.style.setProperty("--c", "hsl(" + hue + " 90% 86%)");
       b.textContent = item[lang][0];
       b.addEventListener("click", function () { choose(i); });
       el.grid.appendChild(b);
