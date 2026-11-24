@@ -14,7 +14,7 @@ body{background:var(--bg);background-attachment:fixed;color:var(--ink);font-fami
 .wrap{max-width:720px;margin:0 auto}
 header{text-align:center;padding:8px 0 4px}
 h1{margin:0;font-size:clamp(26px,6.5vw,36px);font-weight:800;color:#1e3a8a;text-shadow:0 1px 0 rgba(255,255,255,.6)}
-.sub{color:#2c4a63;margin:6px 0 14px;font-size:16px;font-weight:600}
+.sub{color:#1e3a8a;margin:6px 0 14px;font-size:16px;font-weight:600}
 .langs{display:flex;justify-content:center;gap:6px;margin-bottom:14px;flex-wrap:wrap}
 .langs button{border:1px solid var(--line);background:var(--card);color:var(--ink);padding:8px 14px;border-radius:999px;font-size:15px;cursor:pointer}
 .langs button[aria-pressed="true"]{background:var(--acc);border-color:var(--acc);color:#fff}
@@ -40,7 +40,7 @@ button:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
 <body>
 <div class="wrap">
   <header>
-    <h1 id="title">מילון הזמנים של רון</h1>
+    <h1><span aria-hidden="true">⏰</span> <span id="title">מילון הזמנים של רון</span></h1>
     <p class="sub" id="sub">לחצו על ביטוי וקבלו את האמת</p>
   </header>
 
