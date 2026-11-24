@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>מילון הזמנים של רון</title>
 <style>
-:root{--bg:linear-gradient(135deg,#cdeeff 0%,#c4f3ec 55%,#dff9ea 100%);--card:#ffffff;--ink:#1b2d3d;--muted:#5d7385;--acc:#0e7fb8;--acc-soft:#ece5ff;--line:#e2d9f5;--key:#faf8ff;--key-h:#efe9ff}
+:root{--bg:linear-gradient(135deg,#cdeeff 0%,#c4f3ec 55%,#dff9ea 100%);--card:#ffffff;--ink:#1b2d3d;--muted:#2c4a63;--acc:#0a6a9c;--acc-soft:#ece5ff;--line:#e2d9f5;--key:#faf8ff;--key-h:#efe9ff}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#150f24;--card:#1f1733;--ink:#f1ecff;--muted:#a79cc4;--acc:#6fd0ff;--acc-soft:#2b2148;--line:#362c58;--key:#241b3d;--key-h:#302553}}
 :root[data-theme="dark"]{--bg:#150f24;--card:#1f1733;--ink:#f1ecff;--muted:#a79cc4;--acc:#6fd0ff;--acc-soft:#2b2148;--line:#362c58;--key:#241b3d;--key-h:#302553}
 *{box-sizing:border-box}
@@ -13,8 +13,8 @@ html,body{margin:0;padding:0}
 body{background:var(--bg);background-attachment:fixed;color:var(--ink);font-family:"Segoe UI",Arial,"Noto Sans Hebrew",sans-serif;min-height:100vh;padding:16px;overflow-x:hidden}
 .wrap{max-width:720px;margin:0 auto}
 header{text-align:center;padding:8px 0 4px}
-h1{margin:0;font-size:clamp(24px,6vw,34px);background:linear-gradient(90deg,#0ea5e9,#14b8a6,#0891b2);-webkit-background-clip:text;background-clip:text;color:transparent}
-.sub{color:var(--muted);margin:6px 0 14px;font-size:15px}
+h1{margin:0;font-size:clamp(26px,6.5vw,36px);font-weight:800;color:#0b3d5c;text-shadow:0 1px 0 rgba(255,255,255,.6)}
+.sub{color:#2c4a63;margin:6px 0 14px;font-size:16px;font-weight:600}
 .langs{display:flex;justify-content:center;gap:6px;margin-bottom:14px;flex-wrap:wrap}
 .langs button{border:1px solid var(--line);background:var(--card);color:var(--ink);padding:8px 14px;border-radius:999px;font-size:15px;cursor:pointer}
 .langs button[aria-pressed="true"]{background:var(--acc);border-color:var(--acc);color:#fff}
@@ -30,7 +30,7 @@ h1{margin:0;font-size:clamp(24px,6vw,34px);background:linear-gradient(90deg,#0ea
 .chip:hover{filter:brightness(.97) saturate(1.1)}
 .chip:active{transform:scale(.97)}
 .tools{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:14px;flex-wrap:wrap}
-.tools button{background:linear-gradient(90deg,#0ea5e9,#14b8a6);color:#fff;border:0;border-radius:12px;padding:10px 16px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;white-space:pre-line;line-height:1.5;text-align:center}
+.tools button{background:linear-gradient(90deg,#0369a1,#0f766e);color:#fff;border:0;border-radius:12px;padding:10px 16px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;white-space:pre-line;line-height:1.5;text-align:center}
 .count{color:var(--muted);font-size:14px}
 footer{text-align:center;color:var(--muted);font-size:13px;margin-top:18px}
 button:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
@@ -222,9 +222,9 @@ button:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
       b.type = "button";
       b.className = "chip";
       // Each phrase gets its own pastel color, spread around the color wheel.
-      // Blues, turquoise, sea-green, a touch of yellow, and one deeper blue.
-      var PALETTE = ["hsl(205 70% 82%)", "hsl(190 70% 82%)", "hsl(175 70% 82%)", "hsl(200 70% 82%)",
-                     "hsl(165 70% 82%)", "hsl(48 70% 82%)", "hsl(215 60% 68%)"];
+      // Six clearly different blues, turquoise, sea-green and yellow. Neighbours never share a hue.
+      var PALETTE = ["hsl(212 78% 78%)", "hsl(50 90% 74%)", "hsl(178 60% 70%)",
+                     "hsl(232 70% 80%)", "hsl(152 50% 68%)", "hsl(200 85% 88%)"];
       b.style.setProperty("--c", PALETTE[i % PALETTE.length]);
       b.textContent = item[lang][0];
       b.addEventListener("click", function () { choose(i); });
