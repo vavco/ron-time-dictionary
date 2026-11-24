@@ -32,6 +32,7 @@ h1{margin:0;font-size:clamp(26px,6.5vw,36px);font-weight:800;color:#1e3a8a;text-
 .tools{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:14px;flex-wrap:wrap}
 .tools button{background:linear-gradient(90deg,#0369a1,#0f766e);color:#fff;border:0;border-radius:12px;padding:10px 16px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;white-space:pre-line;line-height:1.5;text-align:center}
 .count{color:var(--muted);font-size:14px}
+.wink{vertical-align:-0.25em;margin-inline-start:2px}
 footer{text-align:center;color:var(--muted);font-size:13px;margin-top:18px}
 button:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
 @media (max-width:420px){.grid{grid-template-columns:1fr 1fr}.result{min-height:118px}.result .emo{font-size:36px;min-height:40px}}
@@ -41,7 +42,7 @@ button:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
 <div class="wrap">
   <header>
     <h1><span id="title">מילון הזמנים של רון</span> <span aria-hidden="true">⏰</span></h1>
-    <p class="sub" id="sub">לחצו על ביטוי וקבלו את האמת 😉</p>
+    <p class="sub"><span id="sub">לחצו על ביטוי וקבלו את האמת</span> <svg id="wink" class="wink" width="1.3em" height="1.3em" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#facc15" stroke="#1e3a8a" stroke-width="1.5"/><circle cx="8" cy="9.5" r="1.7" fill="#1e3a8a"/><path d="M14.3 9.6q1.9-1.7 3.7 0" fill="none" stroke="#1e3a8a" stroke-width="1.8" stroke-linecap="round"/><path d="M7.5 14.3q4.5 4.3 9 0" fill="none" stroke="#1e3a8a" stroke-width="1.8" stroke-linecap="round"/></svg></p>
   </header>
 
   <div class="langs" role="group" aria-label="Language">
@@ -148,7 +149,7 @@ button:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
   ];
 
   var UI = {
-    he: { dir: "rtl", title: "מילון הזמנים של רון", sub: "לחצו על ביטוי וקבלו את האמת 😉",
+    he: { dir: "rtl", title: "מילון הזמנים של רון", sub: "לחצו על ביטוי וקבלו את האמת",
           random: "הפתעה 🎲", surprise: "אני עושה את זה ממש עכשיו...\nתודו שלרגע האמנתם (: 😂",
           count: function (n) { return "מספר הדחיות עד כה: " + n; },
           foot: "נבנה במיוחד לרון 🎂",
@@ -179,7 +180,8 @@ button:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
     grid: document.getElementById("grid"), result: document.getElementById("result"),
     say: document.getElementById("say"), answer: document.getElementById("answer"),
     emo: document.getElementById("emo"), count: document.getElementById("count"),
-    random: document.getElementById("random"), foot: document.getElementById("foot")
+    random: document.getElementById("random"), foot: document.getElementById("foot"),
+    wink: document.getElementById("wink")
   };
 
   function splitEmoji(text) {
@@ -203,6 +205,7 @@ button:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
     document.documentElement.dir = t.dir;
     el.title.textContent = t.title;
     el.sub.textContent = t.sub;
+    el.wink.style.display = lang === "he" ? "" : "none";
     el.random.textContent = t.random;
     el.foot.textContent = t.foot;
     document.title = t.title;
