@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>מילון הזמנים של רון</title>
 <style>
-:root{--bg:linear-gradient(135deg,#ffe3f1 0%,#e3f0ff 50%,#e6ffe9 100%);--card:#ffffff;--ink:#261b3d;--muted:#6f6789;--acc:#7b4dff;--acc-soft:#ece5ff;--line:#e2d9f5;--key:#faf8ff;--key-h:#efe9ff}
+:root{--bg:linear-gradient(135deg,#ffb3d9 0%,#a8d8ff 50%,#b5f5c0 100%);--card:#ffffff;--ink:#261b3d;--muted:#6f6789;--acc:#7b4dff;--acc-soft:#ece5ff;--line:#e2d9f5;--key:#faf8ff;--key-h:#efe9ff}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#150f24;--card:#1f1733;--ink:#f1ecff;--muted:#a79cc4;--acc:#a58bff;--acc-soft:#2b2148;--line:#362c58;--key:#241b3d;--key-h:#302553}}
 :root[data-theme="dark"]{--bg:#150f24;--card:#1f1733;--ink:#f1ecff;--muted:#a79cc4;--acc:#a58bff;--acc-soft:#2b2148;--line:#362c58;--key:#241b3d;--key-h:#302553}
 *{box-sizing:border-box}
@@ -19,7 +19,7 @@ h1{margin:0;font-size:clamp(24px,6vw,34px);background:linear-gradient(90deg,#ff4
 .langs button{border:1px solid var(--line);background:var(--card);color:var(--ink);padding:8px 14px;border-radius:999px;font-size:15px;cursor:pointer}
 .langs button[aria-pressed="true"]{background:var(--acc);border-color:var(--acc);color:#fff}
 .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;box-shadow:0 6px 18px rgba(60,40,120,.08)}
-.result{min-height:150px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;margin-bottom:16px}
+.result{position:sticky;top:8px;z-index:2;background:var(--card);border-radius:14px;min-height:150px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;margin-bottom:16px;box-shadow:0 4px 12px rgba(60,40,120,.12)}
 .result .say{color:var(--muted);font-size:15px;margin-bottom:8px;min-height:22px}
 .result .answer{font-size:clamp(19px,4.6vw,24px);font-weight:700;line-height:1.5;word-break:break-word;color:var(--acc)}
 .result .emo{font-size:44px;margin-top:6px;min-height:50px}
@@ -34,7 +34,7 @@ h1{margin:0;font-size:clamp(24px,6vw,34px);background:linear-gradient(90deg,#ff4
 .count{color:var(--muted);font-size:14px}
 footer{text-align:center;color:var(--muted);font-size:13px;margin-top:18px}
 button:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
-@media (max-width:420px){.grid{grid-template-columns:1fr 1fr}}
+@media (max-width:420px){.grid{grid-template-columns:1fr 1fr}.result{min-height:118px}.result .emo{font-size:36px;min-height:40px}}
 </style>
 </head>
 <body>
@@ -223,7 +223,7 @@ button:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
       b.className = "chip";
       // Each phrase gets its own pastel color, spread around the color wheel.
       var hue = (i * 47) % 360;
-      b.style.setProperty("--c", "hsl(" + hue + " 90% 86%)");
+      b.style.setProperty("--c", "hsl(" + hue + " 85% 74%)");
       b.textContent = item[lang][0];
       b.addEventListener("click", function () { choose(i); });
       el.grid.appendChild(b);
