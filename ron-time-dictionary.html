@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>מילון הזמנים של רון</title>
+<style>
+:root{--bg:#f5f1ff;--card:#ffffff;--ink:#261b3d;--muted:#6f6789;--acc:#7b4dff;--acc-soft:#ece5ff;--line:#e2d9f5;--key:#faf8ff;--key-h:#efe9ff;--fav:#ff7a59}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#150f24;--card:#1f1733;--ink:#f1ecff;--muted:#a79cc4;--acc:#a58bff;--acc-soft:#2b2148;--line:#362c58;--key:#241b3d;--key-h:#302553;--fav:#ff9b7d}}
+:root[data-theme="dark"]{--bg:#150f24;--card:#1f1733;--ink:#f1ecff;--muted:#a79cc4;--acc:#a58bff;--acc-soft:#2b2148;--line:#362c58;--key:#241b3d;--key-h:#302553;--fav:#ff9b7d}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:"Segoe UI",Arial,"Noto Sans Hebrew",sans-serif;min-height:100vh;padding:16px;overflow-x:hidden}
+.wrap{max-width:720px;margin:0 auto}
+header{text-align:center;padding:8px 0 4px}
+h1{margin:0;font-size:clamp(24px,6vw,34px)}
+.sub{color:var(--muted);margin:6px 0 14px;font-size:15px}
+.langs{display:flex;justify-content:center;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.langs button{border:1px solid var(--line);background:var(--card);color:var(--ink);padding:8px 14px;border-radius:999px;font-size:15px;cursor:pointer}
+.langs button[aria-pressed="true"]{background:var(--acc);border-color:var(--acc);color:#fff}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;box-shadow:0 6px 18px rgba(60,40,120,.08)}
+.result{min-height:150px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;margin-bottom:16px}
+.result .say{color:var(--muted);font-size:15px;margin-bottom:8px;min-height:22px}
+.result .answer{font-size:clamp(19px,4.6vw,24px);font-weight:600;line-height:1.5;word-break:break-word}
+.result .emo{font-size:44px;margin-top:6px;min-height:50px}
+.result.pop .answer,.result.pop .emo{animation:pop .45s ease}
+@keyframes pop{0%{transform:scale(.9);opacity:0}60%{transform:scale(1.04);opacity:1}100%{transform:scale(1)}}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:9px}
+.chip{position:relative;background:var(--key);color:var(--ink);border:1px solid var(--line);border-radius:14px;padding:12px 8px;font-size:15px;font-weight:600;cursor:pointer;min-height:52px;line-height:1.3;transition:background .15s,transform .1s;font-family:inherit}
+.chip:hover{background:var(--key-h)}
+.chip:active{transform:scale(.97)}
+.chip.fav{border-color:var(--fav);color:var(--fav)}
+.chip .tag{display:block;font-size:11px;font-weight:500;color:var(--fav);margin-top:3px}
+.tools{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:14px;flex-wrap:wrap}
+.tools button{background:var(--acc);color:#fff;border:0;border-radius:12px;padding:10px 16px;font-size:15px;cursor:pointer;font-family:inherit}
+.tools button.ghost{background:var(--acc-soft);color:var(--ink)}
+.count{color:var(--muted);font-size:14px}
+footer{text-align:center;color:var(--muted);font-size:13px;margin-top:18px}
+button:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+@media (max-width:420px){.grid{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1 id="title">מילון הזמנים של רון</h1>
+    <p class="sub" id="sub">לחצו על ביטוי, וקבלו את האמת</p>
+  </header>
+
+  <div class="langs" role="group" aria-label="Language">
+    <button type="button" data-lang="he" aria-pressed="true">עברית</button>
+    <button type="button" data-lang="en" aria-pressed="false">English</button>
+    <button type="button" data-lang="es" aria-pressed="false">Español</button>
+  </div>
+
+  <section class="card">
+    <div class="result" id="result" aria-live="polite">
+      <div class="say" id="say"></div>
+      <div class="answer" id="answer"></div>
+      <div class="emo" id="emo"></div>
+    </div>
+    <div class="grid" id="grid"></div>
+    <div class="tools">
+      <button type="button" id="random">הפתעה 🎲</button>
+      <span class="count" id="count"></span>
+      <button type="button" class="ghost" id="reset">איפוס מונה</button>
+    </div>
+  </section>
+
+  <footer id="foot">נבנה במיוחד לרון 🎂</footer>
+</div>
+
+<script>
+(function () {
+  // Each phrase: [phrase, response] per language. Responses end with an emoji, at most 8 words.
+  var PHRASES = [
+    { he: ["היום", "היום זה היום שבו אני מתחיל. שוב 📅"],
+      en: ["Today", "Today is the day I start. Again 📅"],
+      es: ["Hoy", "Hoy empiezo. Otra vez, claro 📅"] },
+    { he: ["מחר", "מחר זה יום מצוין. תמיד. 🌙"],
+      en: ["Tomorrow", "Tomorrow is a great day. Always 🌙"],
+      es: ["Mañana", "Mañana es un gran día. Siempre 🌙"] },
+    { he: ["במהלך השבוע", "במהלך השבוע, או השבוע שאחריו 🗓️"],
+      en: ["During the week", "During the week, or the one after 🗓️"],
+      es: ["Durante la semana", "Durante la semana, o la siguiente 🗓️"] },
+    { fav: true,
+      he: ["בקרוב", "בקרוב? אל תתפסו אותי במילה 😅"],
+      en: ["Soon", "Soon? Don't hold me to that 😅"],
+      es: ["Pronto", "¿Pronto? No me tomen la palabra 😅"] },
+    { he: ["בבוא העת", "בבוא העת. תהיו אופטימיים 🌅"],
+      en: ["In due time", "In due time. Be optimistic 🌅"],
+      es: ["A su debido tiempo", "A su debido tiempo. Sean optimistas 🌅"] },
+    { he: ["בחודש הבא", "בחודש הבא, כשהמצב יירגע 📆"],
+      en: ["Next month", "Next month, once things calm down 📆"],
+      es: ["El mes que viene", "El mes que viene, cuando se calme todo 📆"] },
+    { he: ["התפנה לי המון זמן", "התפנה לי המון זמן? נתחיל בעוד שבוע 🛋️"],
+      en: ["I've got loads of free time", "Loads of free time? I'll start next week 🛋️"],
+      es: ["Tengo muchísimo tiempo libre", "¿Tiempo libre? Empiezo la semana que viene 🛋️"] },
+    { he: ["נצטרך לדחות ביום", "נדחה ביום. זה מה שאני עושה הכי טוב 📅"],
+      en: ["We'll need to postpone a day", "Postponing a day. My specialty ⏭️"],
+      es: ["Habrá que posponer un día", "Posponemos un día. Mi especialidad ⏭️"] },
+    { he: ["כבר", "יפה שאתם עדיין מאמינים לזה 🙃"],
+      en: ["Already", "Cute that you still believe that 🙃"],
+      es: ["Ya", "Qué bonito que todavía lo creen 🙃"] },
+    { he: ["בשעה הקרובה", "מקווה שזה יקרה עד סוף השבוע, לא מתחייב ⏳"],
+      en: ["In the near future", "Hopefully by the weekend, no promises ⏳"],
+      es: ["En las próximas horas", "Ojalá para el fin de semana, sin promesas ⏳"] },
+    { he: ["עוד רגע", "עוד רגע, בערך שבוע 🕰️"],
+      en: ["In a sec", "In a sec. Give or take a week ⏱️"],
+      es: ["Un momentito", "Un momento, o unas semanas ⏱️"] },
+    { he: ["תכף ומיד", "תכף ומיד... בערך בשנה הבאה 🏃"],
+      en: ["Right away", "Right away... give or take a year 🏃"],
+      es: ["Enseguida", "Enseguida... más o menos en un año 🏃"] },
+    { he: ["אני בדרך", "אני בדרך. בדרך לשום מקום, אבל בדרך 🚗"],
+      en: ["I'm on my way", "On my way. Still in my pajamas 🚗"],
+      es: ["Ya voy", "Ya voy. En mi mente, ya llegué 🚗"] },
+    { he: ["בעוד חצי שעה", "בעוד חצי שעה, מי סופר 🕐"],
+      en: ["In half an hour", "In half an hour. Which half? 🕐"],
+      es: ["En media hora", "En media hora. ¿Cuál media? 🕐"] },
+    { he: ["מחר בבוקר", "מחר בבוקר, אחרי הקפה הראשון ☕"],
+      en: ["Tomorrow morning", "Tomorrow morning, after the second coffee ☕"],
+      es: ["Mañana por la mañana", "Mañana por la mañana, tras el segundo café ☕"] },
+    { he: ["בסוף השבוע", "בסוף השבוע, כשיהיה לי כוח 🛌"],
+      en: ["At the weekend", "This weekend, once I have energy 🛌"],
+      es: ["Este fin de semana", "Este fin de semana, cuando tenga energía 🛌"] },
+    { he: ["השבוע הבא", "השבוע הבא? זה מה שאמרתי בשבוע שעבר 🔁"],
+      en: ["Next week", "Next week? I said that last week too 🔁"],
+      es: ["La semana que viene", "¿La semana que viene? Lo dije la pasada 🔁"] },
+    { he: ["בשנה הבאה", "בשנה הבאה, ואני מתכוון לזה 🎂"],
+      en: ["Next year", "Next year, and I mean it 🎂"],
+      es: ["El año que viene", "El año que viene, lo prometo 🎂"] },
+    { he: ["כשיהיה לי זמן", "כשיהיה לי זמן. כלומר, לעולם לא 🤷"],
+      en: ["When I have time", "When I have time. Which means never 🤷"],
+      es: ["Cuando tenga tiempo", "Cuando tenga tiempo, o sea, nunca 🤷"] },
+    { he: ["אחרי הארוחה", "אחרי הארוחה, שזה אחרי הארוחה הבאה 🍽️"],
+      en: ["After the meal", "After the meal, which means the next one 🍽️"],
+      es: ["Después de comer", "Después de comer, o sea, la próxima comida 🍽️"] },
+    { he: ["ברגע האחרון", "ברגע האחרון, כמו תמיד 😬"],
+      en: ["At the last minute", "At the last minute, as always 😬"],
+      es: ["En el último minuto", "En el último minuto, como siempre 😬"] },
+    { he: ["כשאסיים", "כשאסיים את הדבר הקודם שהתחלתי 📋"],
+      en: ["When I finish", "When I finish what I started... 📋"],
+      es: ["Cuando termine", "Cuando termine lo que empecé 📋"] },
+    { he: ["בזמן הנכון", "בזמן הנכון, שזה תמיד עוד מעט 🎯"],
+      en: ["At the right time", "At the right time, which is never 🎯"],
+      es: ["En el momento adecuado", "En el momento adecuado, o sea, nunca 🎯"] },
+    { he: ["לאחר החג", "לאחר החג, כלומר אחרי החג הבא 🎉"],
+      en: ["After the holiday", "After the holiday... the next one 🎉"],
+      es: ["Después de las fiestas", "Después de las fiestas, las siguientes 🎉"] },
+    { he: ["ביום שני הבא", "ביום שני הבא, ואם לא, אז שני שאחריו 📌"],
+      en: ["Next Monday", "Next Monday. Or the Monday after 📌"],
+      es: ["El lunes que viene", "El lunes que viene, o el siguiente 📌"] },
+    { he: ["בטיסה הבאה", "בטיסה הבאה, שאני כבר מתכנן כמה שנים ✈️"],
+      en: ["On my next flight", "On my next flight. I'm packing... mentally ✈️"],
+      es: ["En mi próximo vuelo", "En mi próximo vuelo, ya lo tengo planeado ✈️"] },
+    { he: ["ברגע שאתפנה", "ברגע שאתפנה, שזה בערך בלתי אפשרי 🧘"],
+      en: ["The moment I'm free", "The moment I'm free, which is never 🧘"],
+      es: ["En cuanto me libere", "En cuanto me libere, o sea, jamás 🧘"] },
+    { he: ["כשאחזור לארץ", "כשאחזור לארץ, נראה מה יהיה אז 🇮🇱"],
+      en: ["When I get back to Israel", "When I'm back in Israel, hypothetically 🇮🇱"],
+      es: ["Cuando vuelva a Israel", "Cuando vuelva a Israel, en teoría 🇮🇱"] },
+    { he: ["אחרי שאנוח קצת", "אחרי שאנוח קצת, שזה נצח 😴"],
+      en: ["After I rest a bit", "After I rest a bit, which is forever 😴"],
+      es: ["Después de descansar un poco", "Después de descansar un poco, o sea, siempre 😴"] },
+    { he: ["לא יודע, בוא נראה", "לא יודע, בוא נראה, ואולי לא 🤞"],
+      en: ["No idea, we'll see", "No idea. We'll see. Maybe not 🤞"],
+      es: ["No sé, ya veremos", "No sé. Ya veremos. Quizás no 🤞"] }
+  ];
+
+  var UI = {
+    he: { dir: "rtl", title: "מילון הזמנים של רון", sub: "לחצו על ביטוי, וקבלו את האמת",
+          say: "רון אומר:", random: "הפתעה 🎲", reset: "איפוס מונה",
+          count: function (n) { return "מספר הדחיות עד כה: " + n; },
+          fav: "המילה האהובה", foot: "נבנה במיוחד לרון 🎂",
+          pick: "לחצו על ביטוי כדי לשמוע את התשובה", idx: 0 },
+    en: { dir: "ltr", title: "Ron's Time Dictionary", sub: "Tap a phrase, get the truth",
+          say: "Ron says:", random: "Surprise me 🎲", reset: "Reset counter",
+          count: function (n) { return "Postponements so far: " + n; },
+          fav: "favorite word", foot: "Made just for Ron 🎂",
+          pick: "Tap a phrase to hear the truth", idx: 1 },
+    es: { dir: "ltr", title: "Diccionario de tiempos de Ron", sub: "Toca una frase y recibe la verdad",
+          say: "Ron dice:", random: "Sorpréndeme 🎲", reset: "Reiniciar contador",
+          count: function (n) { return "Aplazamientos hasta ahora: " + n; },
+          fav: "palabra favorita", foot: "Hecho especialmente para Ron 🎂",
+          pick: "Toca una frase para oír la verdad", idx: 2 }
+  };
+
+  var LANGS = ["he", "en", "es"];
+  var KEY_LANG = "ron_lang";
+  var KEY_COUNT = "ron_count";
+  var lang = "he";
+  var count = 0;
+
+  function store(key, val) { try { localStorage.setItem(key, val); } catch (e) {} }
+  function load(key) { try { return localStorage.getItem(key); } catch (e) { return null; } }
+
+  var el = {
+    title: document.getElementById("title"), sub: document.getElementById("sub"),
+    grid: document.getElementById("grid"), result: document.getElementById("result"),
+    say: document.getElementById("say"), answer: document.getElementById("answer"),
+    emo: document.getElementById("emo"), count: document.getElementById("count"),
+    random: document.getElementById("random"), reset: document.getElementById("reset"),
+    foot: document.getElementById("foot")
+  };
+
+  function splitEmoji(text) {
+    // Last token(s) that are not letters = emoji; keep the text as is, but split for display.
+    var parts = text.split(" ");
+    var last = parts[parts.length - 1];
+    if (/[֐-׿A-Za-z¿¡]/.test(last)) return { text: text, emo: "" };
+    parts.pop();
+    return { text: parts.join(" "), emo: last };
+  }
+
+  function showCount() {
+    el.count.textContent = UI[lang].count(count);
+  }
+
+  function setLang(next) {
+    if (LANGS.indexOf(next) === -1) next = "he";
+    lang = next;
+    var t = UI[lang];
+    document.documentElement.lang = lang;
+    document.documentElement.dir = t.dir;
+    el.title.textContent = t.title;
+    el.sub.textContent = t.sub;
+    el.random.textContent = t.random;
+    el.reset.textContent = t.reset;
+    el.foot.textContent = t.foot;
+    document.title = t.title;
+    Array.prototype.forEach.call(document.querySelectorAll(".langs button"), function (b) {
+      b.setAttribute("aria-pressed", b.getAttribute("data-lang") === lang ? "true" : "false");
+    });
+    renderGrid();
+    showIdle();
+    showCount();
+    store(KEY_LANG, lang);
+  }
+
+  function renderGrid() {
+    el.grid.innerHTML = "";
+    PHRASES.forEach(function (item, i) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "chip" + (item.fav ? " fav" : "");
+      b.textContent = item[lang][0];
+      if (item.fav) {
+        var tag = document.createElement("span");
+        tag.className = "tag";
+        tag.textContent = UI[lang].fav;
+        b.appendChild(tag);
+      }
+      b.addEventListener("click", function () { choose(i); });
+      el.grid.appendChild(b);
+    });
+  }
+
+  function showIdle() {
+    el.say.textContent = "";
+    el.answer.textContent = UI[lang].pick;
+    el.emo.textContent = "";
+  }
+
+  function choose(i) {
+    var item = PHRASES[i];
+    var parts = splitEmoji(item[lang][1]);
+    el.say.textContent = item[lang][0] + " · " + UI[lang].say;
+    el.answer.textContent = parts.text;
+    el.emo.textContent = parts.emo;
+    el.result.classList.remove("pop");
+    void el.result.offsetWidth; // restart animation
+    el.result.classList.add("pop");
+    count += 1;
+    store(KEY_COUNT, String(count));
+    showCount();
+  }
+
+  Array.prototype.forEach.call(document.querySelectorAll(".langs button"), function (b) {
+    b.addEventListener("click", function () { setLang(b.getAttribute("data-lang")); });
+  });
+
+  el.random.addEventListener("click", function () {
+    choose(Math.floor(Math.random() * PHRASES.length));
+  });
+
+  el.reset.addEventListener("click", function () {
+    count = 0;
+    store(KEY_COUNT, "0");
+    showCount();
+  });
+
+  var savedCount = parseInt(load(KEY_COUNT) || "0", 10);
+  count = isNaN(savedCount) ? 0 : savedCount;
+  var savedLang = load(KEY_LANG);
+  setLang(LANGS.indexOf(savedLang) !== -1 ? savedLang : "he");
+})();
+</script>
+</body>
+</html>
