@@ -30,7 +30,7 @@ h1{margin:0;font-size:clamp(24px,6vw,34px);background:linear-gradient(90deg,#0ea
 .chip:hover{filter:brightness(.97) saturate(1.1)}
 .chip:active{transform:scale(.97)}
 .tools{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:14px;flex-wrap:wrap}
-.tools button{background:linear-gradient(90deg,#0ea5e9,#14b8a6);color:#fff;border:0;border-radius:12px;padding:10px 16px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit}
+.tools button{background:linear-gradient(90deg,#0ea5e9,#14b8a6);color:#fff;border:0;border-radius:12px;padding:10px 16px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;white-space:pre-line;line-height:1.5;text-align:center}
 .count{color:var(--muted);font-size:14px}
 footer{text-align:center;color:var(--muted);font-size:13px;margin-top:18px}
 button:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
@@ -149,17 +149,17 @@ button:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
 
   var UI = {
     he: { dir: "rtl", title: "מילון הזמנים של רון", sub: "לחצו על ביטוי, וקבלו את האמת",
-          random: "הפתעה 🎲", surprise: "עכשיו! - תודו שלרגע האמנתם (:",
+          random: "הפתעה 🎲", surprise: "אני עושה את זה ממש עכשיו...\nתודו שלרגע האמנתם (: 😂",
           count: function (n) { return "מספר הדחיות עד כה: " + n; },
           foot: "נבנה במיוחד לרון 🎂",
           pick: "לחצו על ביטוי כדי לשמוע את התשובה" },
     en: { dir: "ltr", title: "Ron's Time Dictionary", sub: "Tap a phrase, get the truth",
-          random: "Surprise me 🎲", surprise: "Now! - admit you believed it for a second (:",
+          random: "Surprise me 🎲", surprise: "I'm doing it right now...\nadmit you believed it for a second (: 😂",
           count: function (n) { return "Postponements so far: " + n; },
           foot: "Made just for Ron 🎂",
           pick: "Tap a phrase to hear the truth" },
     es: { dir: "ltr", title: "Diccionario de tiempos de Ron", sub: "Toca una frase y recibe la verdad",
-          random: "Sorpréndeme 🎲", surprise: "¡Ahora! - admitan que por un segundo lo creyeron (:",
+          random: "Sorpréndeme 🎲", surprise: "Lo estoy haciendo ahora mismo...\nadmitan que por un segundo lo creyeron (: 😂",
           count: function (n) { return "Aplazamientos hasta ahora: " + n; },
           foot: "Hecho especialmente para Ron 🎂",
           pick: "Toca una frase para oír la verdad" }
@@ -222,10 +222,10 @@ button:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
       b.type = "button";
       b.className = "chip";
       // Each phrase gets its own pastel color, spread around the color wheel.
-      // Blues, turquoise, sea-green and a touch of yellow.
-      var HUES = [205, 190, 175, 200, 165, 48];
-      var hue = HUES[i % HUES.length];
-      b.style.setProperty("--c", "hsl(" + hue + " 70% 82%)");
+      // Blues, turquoise, sea-green, a touch of yellow, and one deeper blue.
+      var PALETTE = ["hsl(205 70% 82%)", "hsl(190 70% 82%)", "hsl(175 70% 82%)", "hsl(200 70% 82%)",
+                     "hsl(165 70% 82%)", "hsl(48 70% 82%)", "hsl(215 60% 68%)"];
+      b.style.setProperty("--c", PALETTE[i % PALETTE.length]);
       b.textContent = item[lang][0];
       b.addEventListener("click", function () { choose(i); });
       el.grid.appendChild(b);
@@ -257,13 +257,8 @@ button:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
   });
 
   el.random.addEventListener("click", function () {
-    // The surprise button shows a fixed joke instead of a phrase response; it is not counted.
-    el.say.textContent = "";
-    el.answer.textContent = UI[lang].surprise;
-    el.emo.textContent = "😂";
-    el.result.classList.remove("pop");
-    void el.result.offsetWidth; // restart animation
-    el.result.classList.add("pop");
+    // The surprise button changes its own text to a fixed two-line joke; it is not counted.
+    el.random.textContent = UI[lang].surprise;
   });
 
   var savedCount = parseInt(load(KEY_COUNT) || "0", 10);
