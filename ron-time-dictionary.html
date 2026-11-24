@@ -169,17 +169,17 @@ button:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
 
   var UI = {
     he: { dir: "rtl", title: "מילון הזמנים של רון", sub: "לחצו על ביטוי, וקבלו את האמת",
-          say: "רון אומר:", random: "הפתעה 🎲", reset: "איפוס מונה",
+          random: "הפתעה 🎲", reset: "איפוס מונה",
           count: function (n) { return "מספר הדחיות עד כה: " + n; },
           fav: "המילה האהובה", foot: "נבנה במיוחד לרון 🎂",
           pick: "לחצו על ביטוי כדי לשמוע את התשובה", idx: 0 },
     en: { dir: "ltr", title: "Ron's Time Dictionary", sub: "Tap a phrase, get the truth",
-          say: "Ron says:", random: "Surprise me 🎲", reset: "Reset counter",
+          random: "Surprise me 🎲", reset: "Reset counter",
           count: function (n) { return "Postponements so far: " + n; },
           fav: "favorite word", foot: "Made just for Ron 🎂",
           pick: "Tap a phrase to hear the truth", idx: 1 },
     es: { dir: "ltr", title: "Diccionario de tiempos de Ron", sub: "Toca una frase y recibe la verdad",
-          say: "Ron dice:", random: "Sorpréndeme 🎲", reset: "Reiniciar contador",
+          random: "Sorpréndeme 🎲", reset: "Reiniciar contador",
           count: function (n) { return "Aplazamientos hasta ahora: " + n; },
           fav: "palabra favorita", foot: "Hecho especialmente para Ron 🎂",
           pick: "Toca una frase para oír la verdad", idx: 2 }
@@ -264,7 +264,7 @@ button:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
   function choose(i) {
     var item = PHRASES[i];
     var parts = splitEmoji(item[lang][1]);
-    el.say.textContent = item[lang][0] + " · " + UI[lang].say;
+    el.say.textContent = item[lang][0];
     el.answer.textContent = parts.text;
     el.emo.textContent = parts.emo;
     el.result.classList.remove("pop");
